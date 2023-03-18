@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tic Tac Toe</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div id="container">
+		<h1>Tic Tac Toe</h1>
+		<div id="board">
+			<div class="square" id="0"></div>
+			<div class="square" id="1"></div>
+			<div class="square" id="2"></div>
+			<div class="square" id="3"></div>
+			<div class="square" id="4"></div>
+			<div class="square" id="5"></div>
+			<div class="square" id="6"></div>
+			<div class="square" id="7"></div>
+			<div class="square" id="8"></div>
+		</div>
+		<button id="reset-btn">Reset</button>
+	</div>
+	<script src="app.js"></script>
+</body>
+</html>
+#container {
+  text-align: center;
+}
+
+#board {
+  display: flex;
+  flex-wrap: wrap;
+  width: 300px;
+  margin: 0 auto;
+}
+
+.square {
+  width: 100px;
+  height: 100px;
+  background-color: #eee;
+  margin: 5px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px;
+  cursor: pointer;
+}
+
+.square:hover {
+  background-color: #ddd;
+}
+
+.player-x {
+  color: #f00;
+}
+
+.player-o {
+  color: #00f;
+}
+const squares = document.querySelectorAll('.square');
+const resetButton = document.getElementById('reset-btn');
+const message = document.getElementById('message');
+let currentPlayer = 'X';
+let moves = 0;
+let gameEnded = false;
+
+const winningCombos = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
+];
+
+function checkForWinner() {
+  for (let i = 0; i < winningCombos.length; i++) {
+    const [a, b, c] = winningCombos[i];
+    if (squares[a].textContent === currentPlayer &&
+        squares[b].textContent === currentPlayer &&
+        squares[c].textContent === currentPlayer) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function handleClick(e) {
+  if (!gameEnded && !e.target.textContent) {
+    e.target.textContent = currentPlayer;
+    e.target.classList.add(`player-${currentPlayer.toLowerCase()}`);
+    moves++;
+    if (checkForWinner()) {
+      message.textContent = `Player ${currentPlayer} wins!`;
+      gameEnded = true;
+    } else if (moves === 9) {
+      message.textContent = 'Draw!';
+      gameEnded = true;
+    } else {
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      message.textContent = `It's player ${currentPlayer}'s turn.`;
+    }
+  }
+}
+
